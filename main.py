@@ -1,10 +1,14 @@
 from fastapi import FastAPI
 import requests
+from dotenv import load_dotenv
+
+import os
 
 from models import WeatherResponse
 
+load_dotenv()
 
-API_KEY = 'f8352236d5b70f31d1d9238911b74b7b'
+API_KEY = os.getenv('API_KEY')
 BASE_URL = "https://api.openweathermap.org/data/2.5/weather"
 
 app = FastAPI()
