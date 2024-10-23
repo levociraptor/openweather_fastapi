@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 
 
-class WeatherResponse(BaseModel):
+class Weather(BaseModel):
     city: str
     temareture: float
     feels_like: float

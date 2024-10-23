@@ -1,15 +1,8 @@
 from fastapi import FastAPI
-import requests
-from dotenv import load_dotenv
+import httpx
 
-import os
-
-from models import WeatherResponse
-
-load_dotenv()
-
-API_KEY = os.getenv('API_KEY')
-BASE_URL = "https://api.openweathermap.org/data/2.5/weather"
+from weather_api.schemas import Weather
+from weather_api.config import congig
 
 app = FastAPI()
 
@@ -18,15 +11,16 @@ app = FastAPI()
 def get_weather_by_city(city: str):
     params = {
         'q': city,
-        'appid': API_KEY,
-        'units': 'metric' 
+        'appid': congig.api_key,
+        'units': 'metric'
     }
 
-    response = requests.get(BASE_URL, params=params)
+    response = httpx.get(congig.url, params=params)
     if response.status_code == 404:
         return {'Error': 'city not found'}
 
     data = response.json()
+    print(data)
 
     weather = data['main']
     temareture = weather['temp']
@@ -37,7 +31,7 @@ def get_weather_by_city(city: str):
     wind = data['wind']
     wind_speed = wind['speed']
 
-    weather_info = WeatherResponse(
+    weather_info = Weather(
         city=city,
         temareture=temareture,
         feels_like=feels_like,
