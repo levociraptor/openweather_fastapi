@@ -3,7 +3,7 @@ from pydantic import BaseModel
 
 class Weather(BaseModel):
     city: str
-    temareture: float
+    temperature: float
     feels_like: float
     pressure: int
     humidity: int
