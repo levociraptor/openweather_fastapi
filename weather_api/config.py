@@ -1,26 +1,13 @@
-import os
-from dataclasses import dataclass
-
 from dotenv import load_dotenv
 
-
-@dataclass
-class OpenWeatherConfig:
-    url: str
-    api_key: str
+from dataclasses import dataclass
+import os
 
 
 @dataclass
-class WeatherStackConfig:
+class Config:
     url: str
     api_key: str
-
-
-@dataclass
-class WeatherBitConfig:
-    url: str
-    api_key: str
-
 
 @dataclass
 class DbConfig:
@@ -32,18 +19,10 @@ class DbConfig:
 
 
 load_dotenv()
+BASE_URL = "https://api.openweathermap.org/data/2.5/weather"
+API_KEY = os.getenv('API_KEY')
 
-BASE_URL_OPENWEATHER = "https://api.openweathermap.org/data/2.5/weather"
-API_KEY_OPENWEATHER = os.getenv('API_KEY_OPENWEATHER')
-openweather_config = OpenWeatherConfig(BASE_URL_OPENWEATHER, API_KEY_OPENWEATHER)
-
-BASE_URL_WEATHERSTACK = "https://api.weatherstack.com/current?access_key=1f7d0dbb134b93af27d2b78f16711773"
-API_KEY_WEATHERSTACK = os.getenv('API_KEY_WEATHERSTACK')
-weather_stack_config = WeatherBitConfig(BASE_URL_WEATHERSTACK, API_KEY_WEATHERSTACK)
-
-BASE_URL_WEATHERBIT = "https://api.weatherbit.io/v2.0/current"
-API_KEY_WEATHERBIT = os.getenv('API_KEY_WEATHERBIT')
-weather_bit_config = WeatherBitConfig(BASE_URL_WEATHERBIT, API_KEY_WEATHERBIT)
+config = Config(BASE_URL, API_KEY)
 
 HOST = os.getenv('HOST')
 USERNAME = os.getenv('USER')
