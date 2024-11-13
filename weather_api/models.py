@@ -1,7 +1,7 @@
-from sqlalchemy import Table, Column, Integer, Float, String, DateTime, MetaData, BigInteger
+from sqlalchemy import BigInteger, DateTime, Float, Integer, String
+from sqlalchemy import Column, MetaData, Table
 
 medatadata_obj = MetaData()
-
 
 weather_by_city_table = Table(
     'weather_by_city',
@@ -13,5 +13,5 @@ weather_by_city_table = Table(
     Column('pressure', Integer),
     Column('humidity', Integer),
     Column('wind_speed', Float),
-    Column('datetime', DateTime)
+    Column('created_at', DateTime)
 )
