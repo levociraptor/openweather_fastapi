@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+from typing import Any
 
 import psycopg2
 from psycopg2.extras import RealDictCursor
@@ -8,20 +9,16 @@ from weather_api.repos.weather.repo import WeatherRepo
 from weather_api.schemas import Weather
 
 
-# TODO need refactor
 class WeatherPsycoRepo(WeatherRepo):
-    def __init__(self) -> None:
-        self.conn = None
-        self._get_db_connection()
-
-    def _get_db_connection(self) -> None:
-        self.conn = psycopg2.connect(
+    def get_db_connection(self) -> Any:
+        conn = psycopg2.connect(
             host=db_config.host,
             database='weather',
             user=db_config.username,
             password=db_config.password,
-            cursor_factory=RealDictCursor
+            cursor_factory=RealDictCursor,
         )
+        return conn
 
     def insert_weather_by_city_data(
             self,
@@ -33,13 +30,16 @@ class WeatherPsycoRepo(WeatherRepo):
             wind_speed: float,
             ) -> None:
 
-        self._get_db_connection()
-        cursor = self.conn.cursor()
+        conn = self.get_db_connection()
+        cursor = conn.cursor()
 
-        insert_query = """
-        INSERT INTO weather_by_city (city, temperature, feels_like, pressure, humidity, wind_speed, created_at)
-        VALUES (%s, %s, %s, %s, %s, %s, %s)
-        """
+        insert_query = (
+            """
+            INSERT INTO weather_by_city (
+            city, temperature, feels_like, pressure, humidity, wind_speed, created_at
+            ) VALUES (%s, %s, %s, %s, %s, %s, %s)
+            """
+        )
 
         cursor.execute(insert_query, (
             city,
@@ -51,14 +51,14 @@ class WeatherPsycoRepo(WeatherRepo):
             datetime.now()
             ))
 
-        self.conn.commit()
+        conn.commit()
 
         cursor.close()
-        self.conn.close()
+        conn.close()
 
     def read_last_data_by_city(self, city: str) -> Weather | None:
-        self._get_db_connection()
-        cursor = self.conn.cursor()
+        conn = self.get_db_connection()
+        cursor = conn.cursor()
 
         select_query = """
         SELECT * FROM weather_by_city
@@ -72,7 +72,7 @@ class WeatherPsycoRepo(WeatherRepo):
         result = cursor.fetchone()
 
         cursor.close()
-        self.conn.close()
+        conn.close()
 
         if not result:
             return None
