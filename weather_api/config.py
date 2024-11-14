@@ -5,19 +5,7 @@ from dotenv import load_dotenv
 
 
 @dataclass
-class OpenWeatherConfig:
-    url: str
-    api_key: str
-
-
-@dataclass
-class WeatherStackConfig:
-    url: str
-    api_key: str
-
-
-@dataclass
-class WeatherBitConfig:
+class WeatherClientConfig:
     url: str
     api_key: str
 
@@ -35,15 +23,15 @@ load_dotenv()
 
 BASE_URL_OPENWEATHER = "https://api.openweathermap.org/data/2.5/weather"
 API_KEY_OPENWEATHER = os.getenv('API_KEY_OPENWEATHER')
-openweather_config = OpenWeatherConfig(BASE_URL_OPENWEATHER, API_KEY_OPENWEATHER)
+openweather_config = WeatherClientConfig(BASE_URL_OPENWEATHER, API_KEY_OPENWEATHER)
 
-BASE_URL_WEATHERSTACK = "https://api.weatherstack.com/current?access_key=1f7d0dbb134b93af27d2b78f16711773"
+BASE_URL_WEATHERSTACK = "https://api.weatherstack.com/current"
 API_KEY_WEATHERSTACK = os.getenv('API_KEY_WEATHERSTACK')
-weather_stack_config = WeatherBitConfig(BASE_URL_WEATHERSTACK, API_KEY_WEATHERSTACK)
+weatherstack_config = WeatherClientConfig(BASE_URL_WEATHERSTACK, API_KEY_WEATHERSTACK)
 
 BASE_URL_WEATHERBIT = "https://api.weatherbit.io/v2.0/current"
 API_KEY_WEATHERBIT = os.getenv('API_KEY_WEATHERBIT')
-weather_bit_config = WeatherBitConfig(BASE_URL_WEATHERBIT, API_KEY_WEATHERBIT)
+weatherbit_config = WeatherClientConfig(BASE_URL_WEATHERBIT, API_KEY_WEATHERBIT)
 
 HOST = os.getenv('HOST')
 USERNAME = os.getenv('USER')
@@ -53,4 +41,8 @@ DP_PORT = os.getenv('DB_PORT')
 
 db_config = DbConfig(HOST, USERNAME, PASSWORD, DB_NAME, DP_PORT)
 
-DATABASE_URL_PSYCOPG = f'postgresql+psycopg://{db_config.username}:{db_config.password}@{db_config.host}:{db_config.db_port}/{db_config.db_name}?client_encoding=utf8'
+DATABASE_URL_PSYCOPG = (
+    f'postgresql+psycopg://{db_config.username}:{db_config.password}'
+    f'@{db_config.host}:{db_config.db_port}/{db_config.db_name}'
+    '?client_encoding=utf8'
+)
