@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
-from typing import Any
 
 import psycopg2
+from psycopg2.extensions import connection
 from psycopg2.extras import RealDictCursor
 
 from weather_api.config import db_config
@@ -10,22 +10,21 @@ from weather_api.schemas import Weather
 
 
 class WeatherPsycoRepo(WeatherRepo):
-    def get_db_connection(self) -> Any:
-        conn = psycopg2.connect(
+    def get_db_connection(self) -> connection:
+        return psycopg2.connect(
             host=db_config.host,
             database='weather',
             user=db_config.username,
             password=db_config.password,
             cursor_factory=RealDictCursor,
         )
-        return conn
 
     def insert_weather_by_city_data(
             self,
             city: str,
             temperature: float,
             feels_like: float,
-            pressure: int,
+            pressure: float,
             humidity: int,
             wind_speed: float,
             ) -> None:

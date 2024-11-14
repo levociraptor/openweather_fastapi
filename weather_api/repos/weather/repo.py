@@ -9,7 +9,7 @@ class WeatherRepo(t.Protocol):
         city: str,
         temperature: float,
         feels_like: float,
-        pressure: int,
+        pressure: float,
         humidity: int,
         wind_speed: float,
     ) -> None:

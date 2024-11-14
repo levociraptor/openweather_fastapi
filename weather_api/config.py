@@ -16,28 +16,28 @@ class DbConfig:
     username: str
     password: str
     db_name: str
-    db_port: int
+    db_port: str
 
 
 load_dotenv()
 
 BASE_URL_OPENWEATHER = "https://api.openweathermap.org/data/2.5/weather"
-API_KEY_OPENWEATHER = os.getenv('API_KEY_OPENWEATHER')
+API_KEY_OPENWEATHER = os.environ['API_KEY_OPENWEATHER']
 openweather_config = WeatherClientConfig(BASE_URL_OPENWEATHER, API_KEY_OPENWEATHER)
 
 BASE_URL_WEATHERSTACK = "https://api.weatherstack.com/current"
-API_KEY_WEATHERSTACK = os.getenv('API_KEY_WEATHERSTACK')
+API_KEY_WEATHERSTACK = os.environ['API_KEY_WEATHERSTACK']
 weatherstack_config = WeatherClientConfig(BASE_URL_WEATHERSTACK, API_KEY_WEATHERSTACK)
 
 BASE_URL_WEATHERBIT = "https://api.weatherbit.io/v2.0/current"
-API_KEY_WEATHERBIT = os.getenv('API_KEY_WEATHERBIT')
+API_KEY_WEATHERBIT = os.environ['API_KEY_WEATHERBIT']
 weatherbit_config = WeatherClientConfig(BASE_URL_WEATHERBIT, API_KEY_WEATHERBIT)
 
-HOST = os.getenv('HOST')
-USERNAME = os.getenv('USER')
-PASSWORD = os.getenv('PASSWORD')
-DB_NAME = os.getenv('DB_NAME')
-DP_PORT = os.getenv('DB_PORT')
+HOST = os.environ['HOST']
+USERNAME = os.environ['USER']
+PASSWORD = os.environ['PASSWORD']
+DB_NAME = os.environ['DB_NAME']
+DP_PORT = os.environ['DB_PORT']
 
 db_config = DbConfig(HOST, USERNAME, PASSWORD, DB_NAME, DP_PORT)
 
