@@ -27,11 +27,11 @@ openweather_config = WeatherClientConfig(BASE_URL_OPENWEATHER, API_KEY_OPENWEATH
 
 BASE_URL_WEATHERSTACK = "https://api.weatherstack.com/current"
 API_KEY_WEATHERSTACK = os.getenv('API_KEY_WEATHERSTACK')
-weather_stack_config = WeatherClientConfig(BASE_URL_WEATHERSTACK, API_KEY_WEATHERSTACK)
+weatherstack_config = WeatherClientConfig(BASE_URL_WEATHERSTACK, API_KEY_WEATHERSTACK)
 
 BASE_URL_WEATHERBIT = "https://api.weatherbit.io/v2.0/current"
 API_KEY_WEATHERBIT = os.getenv('API_KEY_WEATHERBIT')
-weather_bit_config = WeatherClientConfig(BASE_URL_WEATHERBIT, API_KEY_WEATHERBIT)
+weatherbit_config = WeatherClientConfig(BASE_URL_WEATHERBIT, API_KEY_WEATHERBIT)
 
 HOST = os.getenv('HOST')
 USERNAME = os.getenv('USER')

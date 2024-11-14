@@ -5,6 +5,6 @@ class Weather(BaseModel):
     city: str
     temperature: float
     feels_like: float
-    pressure: int
+    pressure: int | float
     humidity: int
     wind_speed: float

@@ -24,7 +24,7 @@ class WeatherAlchemyRepo(WeatherRepo):
             ) -> None:
         with self.engine.connect() as conn:
             stmt = insert(weather_by_city_table).values(
-                city=city,
+                city=city.lower(),
                 temperature=tmp,
                 feels_like=feels_like,
                 pressure=pressure,
@@ -39,7 +39,7 @@ class WeatherAlchemyRepo(WeatherRepo):
     def read_last_data_by_city(self, city: str) -> Weather | None:
         with self.engine.connect() as conn:
             query = select(weather_by_city_table).where(
-                    weather_by_city_table.c.city == city
+                    weather_by_city_table.c.city == city.lower()
                 ).order_by(
                     desc(weather_by_city_table.c.created_at)
                 ).limit(1)

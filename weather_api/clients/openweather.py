@@ -1,7 +1,6 @@
 import httpx
 
 from weather_api.clients.weather import WeatherClient
-from weather_api.config import openweather_config
 from weather_api.schemas import Weather
 
 
@@ -28,7 +27,3 @@ class OpenWeatherClient(WeatherClient):
             wind_speed=data['wind']['speed']
         )
         return weather_info
-
-
-def get_openweather_client() -> OpenWeatherClient:
-    return OpenWeatherClient(openweather_config.url, openweather_config.api_key)

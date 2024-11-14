@@ -42,7 +42,7 @@ class WeatherPsycoRepo(WeatherRepo):
         )
 
         cursor.execute(insert_query, (
-            city,
+            city.lower(),
             temperature,
             feels_like,
             pressure,
@@ -67,7 +67,7 @@ class WeatherPsycoRepo(WeatherRepo):
         LIMIT 1
         """
 
-        cursor.execute(select_query, (city,))
+        cursor.execute(select_query, (city.lower(),))
 
         result = cursor.fetchone()
 

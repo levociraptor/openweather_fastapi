@@ -1,7 +1,6 @@
 import httpx
 
 from weather_api.clients.weather import WeatherClient
-from weather_api.config import weather_bit_config
 from weather_api.schemas import Weather
 
 
@@ -27,7 +26,3 @@ class WeatherBitClient(WeatherClient):
             wind_speed=data['data'][0]['wind_spd']
         )
         return weather_info
-
-
-def get_weatherbit_client() -> WeatherBitClient:
-    return WeatherBitClient(weather_bit_config.url, weather_bit_config.api_key)

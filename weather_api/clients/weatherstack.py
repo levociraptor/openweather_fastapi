@@ -1,7 +1,6 @@
 import httpx
 
 from weather_api.clients.weather import WeatherClient
-from weather_api.config import weather_stack_config
 from weather_api.schemas import Weather
 
 
@@ -27,7 +26,3 @@ class WeatherStackClient(WeatherClient):
             wind_speed=data['current']['wind_speed']
         )
         return weather_info
-
-
-def get_weatherstack_client() -> WeatherStackClient:
-    return WeatherStackClient(weather_stack_config.url, weather_stack_config.api_key)
