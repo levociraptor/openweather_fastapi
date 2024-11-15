@@ -60,6 +60,7 @@ class WeatherAlchemyRepo(WeatherRepo):
                     wind_speed=result[6]
                 )
                 return weather_info
+            return None
 
 
 def get_weather_alchemy_repo() -> WeatherAlchemyRepo:

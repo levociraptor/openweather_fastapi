@@ -84,9 +84,10 @@ class WeatherPsycoRepo(WeatherRepo):
                 feels_like=result['feels_like'],
                 pressure=result['pressure'],
                 humidity=result['humidity'],
-                wind_speed=result['wind_speed']
+                wind_speed=result['wind_speed'],
             )
             return weather_info
+        return None
 
 
 def get_weather_psyco_repo() -> WeatherPsycoRepo:

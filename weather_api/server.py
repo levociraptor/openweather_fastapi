@@ -2,7 +2,7 @@ import typing as t
 
 from fastapi import Depends, FastAPI
 
-from weather_api.depends import get_weather_service, get_weather_repo
+from weather_api.depends import get_weather_repo, get_weather_service
 from weather_api.repos.weather.repo import WeatherRepo
 from weather_api.schemas import Weather
 from weather_api.services.weather import WeatherService
