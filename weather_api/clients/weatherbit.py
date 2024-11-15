@@ -15,6 +15,11 @@ class WeatherBitClient(WeatherClient):
             "key": self.api_key,
         }
         response = httpx.get(self.url, params=params)
+        try:
+            response.raise_for_status()
+        except httpx.HTTPStatusError as exc:
+            print(f'Error responsse {exc.response.status_code} while requesting {exc.request.url}')
+
         data = response.json()
 
         weather_info = Weather(

@@ -23,7 +23,7 @@ def get_weather_repo(
     return weather_alchemy_repo
 
 
-def get_weather_info() -> WeatherService:
+def get_weather_service() -> WeatherService:
     openweather_client = OpenWeatherClient(openweather_config.url, openweather_config.api_key)
     weatherbit_client = WeatherBitClient(weatherbit_config.url, weatherbit_config.api_key)
     weatherstack_client = WeatherStackClient(weatherstack_config.url, weatherstack_config.api_key)

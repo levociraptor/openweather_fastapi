@@ -18,7 +18,7 @@ class WeatherAlchemyRepo(WeatherRepo):
             city: str,
             tmp: float,
             feels_like: float,
-            pressure: int,
+            pressure: float,
             humidity: int,
             wind_speed: float
             ) -> None:
@@ -60,6 +60,7 @@ class WeatherAlchemyRepo(WeatherRepo):
                     wind_speed=result[6]
                 )
                 return weather_info
+            return None
 
 
 def get_weather_alchemy_repo() -> WeatherAlchemyRepo:
