@@ -9,17 +9,18 @@ class WeatherStackClient(WeatherClient):
         self.url = url
         self.api_key = api_key
 
-    async def get_weather_data(self, city: str) -> Weather:
+    async def get_weather_data(self, city: str) -> Weather | None:
         params = {
             "query": city,
             "access_key": self.api_key,
         }
         async with httpx.AsyncClient() as client:
-            response = await client.get(self.url, params=params)
-        try:
-            response.raise_for_status()
-        except httpx.HTTPStatusError as exc:
-            print(f'Error responsse {exc.response.status_code} while requesting {exc.request.url}')
+            try:
+                response = await client.get(self.url, params=params)
+                response.raise_for_status()
+            except httpx.HTTPError as exc:
+                print(f'Error responsse {exc} while requesting {exc}')
+                return None
 
         data = response.json()
 
