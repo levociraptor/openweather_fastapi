@@ -9,12 +9,13 @@ class WeatherBitClient(WeatherClient):
         self.url = url
         self.api_key = api_key
 
-    def get_weather_data(self, city: str) -> Weather:
+    async def get_weather_data(self, city: str) -> Weather:
         params = {
             "city": city,
             "key": self.api_key,
         }
-        response = httpx.get(self.url, params=params)
+        async with httpx.AsyncClient() as client:
+            response = await client.get(self.url, params=params)
         try:
             response.raise_for_status()
         except httpx.HTTPStatusError as exc:

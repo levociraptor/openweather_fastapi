@@ -60,6 +60,7 @@ flake8-import-order = "0.18.2"
 psycopg2 = "^2.9.10"
 sqlalchemy = "^2.0.36"
 psycopg = {version = "^3.2.3", extras = ["binary"]}
+asyncpg = "^0.30.0"
 
 
 [build-system]
