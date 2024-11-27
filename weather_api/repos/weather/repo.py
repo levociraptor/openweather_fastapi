@@ -4,7 +4,7 @@ from weather_api.schemas import Weather
 
 
 class WeatherRepo(t.Protocol):
-    def insert_weather_by_city_data(
+    async def insert_weather_by_city_data(
         self,
         city: str,
         temperature: float,
@@ -15,5 +15,5 @@ class WeatherRepo(t.Protocol):
     ) -> None:
         """Insert weather in the city."""
 
-    def read_last_data_by_city(self, city: str) -> Weather | None:
+    async def read_last_data_by_city(self, city: str) -> Weather | None:
         """Selcect weather"""

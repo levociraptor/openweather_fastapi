@@ -6,11 +6,12 @@ class WeatherService():
     def __init__(self, clients: list[WeatherClient]) -> None:
         self.clients = clients
 
-    def get_weather_info(self, city: str) -> Weather:
+    async def get_weather_info(self, city: str) -> Weather:
         weathers = []
         for client in self.clients:
-            weather = client.get_weather_data(city)
-            weathers.append(weather)
+            weather = await client.get_weather_data(city)
+            if weather is not None:
+                weathers.append(weather)
 
         weather_info = Weather(
             city=city,

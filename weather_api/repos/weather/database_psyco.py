@@ -1,8 +1,7 @@
 from datetime import datetime, timedelta
 
-import psycopg2
-from psycopg2.extensions import connection
-from psycopg2.extras import RealDictCursor
+import asyncpg
+from asyncpg.connection import Connection
 
 from weather_api.config import db_config
 from weather_api.repos.weather.repo import WeatherRepo
@@ -10,16 +9,15 @@ from weather_api.schemas import Weather
 
 
 class WeatherPsycoRepo(WeatherRepo):
-    def get_db_connection(self) -> connection:
-        return psycopg2.connect(
+    async def get_db_connection(self) -> Connection:
+        return await asyncpg.connect(
             host=db_config.host,
             database='weather',
             user=db_config.username,
             password=db_config.password,
-            cursor_factory=RealDictCursor,
         )
 
-    def insert_weather_by_city_data(
+    async def insert_weather_by_city_data(
             self,
             city: str,
             temperature: float,
@@ -29,62 +27,54 @@ class WeatherPsycoRepo(WeatherRepo):
             wind_speed: float,
             ) -> None:
 
-        conn = self.get_db_connection()
-        cursor = conn.cursor()
+        conn = await self.get_db_connection()
 
         insert_query = (
             """
             INSERT INTO weather_by_city (
             city, temperature, feels_like, pressure, humidity, wind_speed, created_at
-            ) VALUES (%s, %s, %s, %s, %s, %s, %s)
+            ) VALUES ($1, $2, $3, $4, $5, $6, $7)
             """
         )
 
-        cursor.execute(insert_query, (
+        await conn.execute(
+            insert_query,
             city.lower(),
             temperature,
             feels_like,
             pressure,
             humidity,
             wind_speed,
-            datetime.now()
-            ))
+            datetime.now(),
+            )
 
-        conn.commit()
+        await conn.close()
 
-        cursor.close()
-        conn.close()
-
-    def read_last_data_by_city(self, city: str) -> Weather | None:
-        conn = self.get_db_connection()
-        cursor = conn.cursor()
+    async def read_last_data_by_city(self, city: str) -> Weather | None:
+        conn = await self.get_db_connection()
 
         select_query = """
         SELECT * FROM weather_by_city
-        WHERE city = %s
+        WHERE city = $1
         ORDER BY created_at DESC
         LIMIT 1
         """
+        weather_record = await conn.fetchrow(select_query, city.lower())
 
-        cursor.execute(select_query, (city.lower(),))
+        await conn.close()
 
-        result = cursor.fetchone()
-
-        cursor.close()
-        conn.close()
-
-        if not result:
+        if not weather_record:
             return None
 
-        datetime_last_request = result['created_at']
+        datetime_last_request = weather_record['created_at']
         if datetime.now() - datetime_last_request < timedelta(hours=1):
             weather_info = Weather(
-                city=result['city'],
-                temperature=result['temperature'],
-                feels_like=result['feels_like'],
-                pressure=result['pressure'],
-                humidity=result['humidity'],
-                wind_speed=result['wind_speed'],
+                city=weather_record['city'],
+                temperature=weather_record['temperature'],
+                feels_like=weather_record['feels_like'],
+                pressure=weather_record['pressure'],
+                humidity=weather_record['humidity'],
+                wind_speed=weather_record['wind_speed'],
             )
             return weather_info
         return None

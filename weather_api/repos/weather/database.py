@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 
-from sqlalchemy import Engine
-from sqlalchemy import create_engine, desc, insert, select
+from sqlalchemy import desc, insert, select
+from sqlalchemy.ext.asyncio import AsyncEngine, create_async_engine
 
 from weather_api.config import DATABASE_URL_PSYCOPG
 from weather_api.models import weather_by_city_table
@@ -10,10 +10,10 @@ from weather_api.schemas import Weather
 
 
 class WeatherAlchemyRepo(WeatherRepo):
-    def __init__(self, engine: Engine) -> None:
+    def __init__(self, engine: AsyncEngine) -> None:
         self.engine = engine
 
-    def insert_weather_by_city_data(
+    async def insert_weather_by_city_data(
             self,
             city: str,
             tmp: float,
@@ -22,7 +22,7 @@ class WeatherAlchemyRepo(WeatherRepo):
             humidity: int,
             wind_speed: float
             ) -> None:
-        with self.engine.connect() as conn:
+        async with self.engine.connect() as conn:
             stmt = insert(weather_by_city_table).values(
                 city=city.lower(),
                 temperature=tmp,
@@ -33,40 +33,40 @@ class WeatherAlchemyRepo(WeatherRepo):
                 created_at=datetime.now()
             )
 
-            conn.execute(stmt)
-            conn.commit()
+            await conn.execute(stmt)
+            await conn.commit()
 
-    def read_last_data_by_city(self, city: str) -> Weather | None:
-        with self.engine.connect() as conn:
+    async def read_last_data_by_city(self, city: str) -> Weather | None:
+        async with self.engine.connect() as conn:
             query = select(weather_by_city_table).where(
                     weather_by_city_table.c.city == city.lower()
                 ).order_by(
                     desc(weather_by_city_table.c.created_at)
                 ).limit(1)
 
-            result = conn.execute(query).fetchone()
+            result = await conn.execute(query)
+            row = result.fetchone()
 
-            if not result:
+            if not row:
                 return None
 
-            datetime_last_request = result[-1]
+            datetime_last_request = row[-1]
             if datetime.now() - datetime_last_request < timedelta(hours=1):
                 weather_info = Weather(
-                    city=result[1],
-                    temperature=result[2],
-                    feels_like=result[3],
-                    pressure=result[4],
-                    humidity=result[5],
-                    wind_speed=result[6]
+                    city=row[1],
+                    temperature=row[2],
+                    feels_like=row[3],
+                    pressure=row[4],
+                    humidity=row[5],
+                    wind_speed=row[6]
                 )
                 return weather_info
             return None
 
 
 def get_weather_alchemy_repo() -> WeatherAlchemyRepo:
-    engine = create_engine(
+    engine = create_async_engine(
         url=DATABASE_URL_PSYCOPG,
         echo=True,
-        client_encoding='utf8',
     )
     return WeatherAlchemyRepo(engine)

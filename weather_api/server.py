@@ -12,22 +12,22 @@ app = FastAPI()
 
 
 @app.get('/weather/')
-def get_weather_by_city(
+async def get_weather_by_city(
     city: str,
     weather_repo: t.Annotated[WeatherRepo, Depends(get_weather_repo)],
     weather_getter: t.Annotated[WeatherService, Depends(get_weather_service)]
 ) -> Weather | dict[str, str]:
 
-    weather_info = weather_repo.read_last_data_by_city(city)
+    weather_info = await weather_repo.read_last_data_by_city(city)
 
     if weather_info:
         return weather_info
 
-    weather_service = weather_getter.get_weather_info(city)
+    weather_service = await weather_getter.get_weather_info(city)
     if not weather_service:
         return {"Error": "City not found"}
 
-    weather_repo.insert_weather_by_city_data(
+    await weather_repo.insert_weather_by_city_data(
         weather_service.city,
         weather_service.temperature,
         weather_service.feels_like,

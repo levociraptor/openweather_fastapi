@@ -42,7 +42,6 @@ DP_PORT = os.environ['DB_PORT']
 db_config = DbConfig(HOST, USERNAME, PASSWORD, DB_NAME, DP_PORT)
 
 DATABASE_URL_PSYCOPG = (
-    f'postgresql+psycopg://{db_config.username}:{db_config.password}'
+    f'postgresql+asyncpg://{db_config.username}:{db_config.password}'
     f'@{db_config.host}:{db_config.db_port}/{db_config.db_name}'
-    '?client_encoding=utf8'
 )
